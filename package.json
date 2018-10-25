@@ -1,22 +1,21 @@
 {
-  "name": "k9",
+  "name": "pin-bot",
   "version": "1.0.0",
-  "description": "a basic discord bot",
+  "description": "a discord bot to pin messages",
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anantankur/helloDiscBot.git"
+    "url": "git+https://github.com/anantankur/pin-bot.git"
   },
-  "author": "",
+  "author": "Ankur Anant",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^1.18.4"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "express": "^4.16.3"
   }

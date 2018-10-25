@@ -1,17 +1,14 @@
 const discord = require('discord.io');
 const exp = require('express');
-const bodyParser = require('body-parser');
 
 const app = exp();
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const channel = process.env.PORT || 504977712792731680;
 
 //bot name
 const botName = "pinner";
-
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
 	res.status(200).send('YAYYYYYYY! I am up')
