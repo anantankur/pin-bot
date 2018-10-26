@@ -58,7 +58,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
 			+"`category: general, webdesign`"+"\n"
 			+"`no need to wrap any text in commas/brackets`"+" :smiley:"
 		});
-	}	else if(message.includes('pinner-pin~') && (user !== botName) && (channelID === CHANNEL )) {
+	}	else if(message.includes('pinner-pin~') && (user !== botName) && (channelID === channel )) {
 
 			try{
 				category = message.split('~')[1].trim();
