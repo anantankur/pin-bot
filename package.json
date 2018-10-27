@@ -19,6 +19,7 @@
     "body-parser": "^1.18.3",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "express": "^4.16.3",
-    "mongoose": "^5.3.7"
+    "mongoose": "^5.3.7",
+    "url-metadata": "^2.1.7"
   }
 }

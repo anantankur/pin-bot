@@ -1,14 +1,15 @@
 const discord = require('discord.io');
 const exp = require('express');
+const urlMetadata = require('url-metadata');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 const app = exp();
 app.use(bodyParser.json());
 const port = process.env.PORT || 3001;
-const channelA1 = process.env.CHANNELA1;
-const channelT = process.env.CHANNELT;
+const channel = process.env.CHANNELRT;
+const channel = process.env.CHANNELT;
 //bot name
-const botName = "pinner";
+const botName = "dev-resources";
 //db url
 let db_url = process.env.DBURL;
 // let db_url = "mongodb://127.0.0.1:27017/test";
@@ -40,7 +41,7 @@ console.log(Linky.db.name);
 
 const bot = new discord.Client({
 	autorun: true,
-	token: process.env.DISCORD_TOKEN
+	token: process.env.DISCORD_TOKEN;
 });
 
 bot.on('ready', (event) => {
@@ -49,51 +50,54 @@ bot.on('ready', (event) => {
 
 bot.on('message', (user, userID, channelID, message, event) => {
 
-	let url, category;
+	let url, category, url_text, desc;
 
 	if (message === "~help~") {
 		bot.simulateTyping( channelID );
 		bot.sendMessage({
 			to: channelID,
-			message: "message format -> `pinner-pin~ category ~ anchor_text ~  url ~ description`"+"\n"
-			+"category: general, webdesign"+"\n"
-			+"no need to wrap any text in commas/brackets"+" :smiley:"
+			message: "message format -> `!pin url`"+"\n"
+			+"`no need to wrap any text in commas/brackets`"+" :smiley:"
 		});
-	}	else if(message.includes('pinner-pin~') && (user !== botName) && (channelID === channelA1 || channelID === channelT)) {
+	}	else if(message.startsWith('!pin') && (user !== botName) && (channelID === CHANNELT || channelID === CHANNELRT)) {
 
 			try{
-				category = message.split('~')[1].trim();
-				url_text = message.split('~')[2].trim();
-				url = message.split('~')[3].trim();
-				desc = message.split('~')[4].trim();
-				console.log(category);
+				url = message.substr(4).trim();
 				console.log(url);
-				bot.simulateTyping( channelID );
-				if (ValidURL(url)) {
+
+				urlMetadata(url).then(
+				function (metadata) { // success handler
+					category = "random";
+					url_text = metadata.title;
+					desc = metadata.description;
 					bot.sendMessage({
 						to: channelID,
 						message: 'by ' + user + "\n" + url
 					});
-				} else{
+
+					Linky.create({category, url_text, url, desc}, function(err, newData){
+					    if(err){
+					      console.log(err);
+					    } else {
+					      console.log('data saved');
+					    }
+				  	});
+					console.log(metadata.title)
+				},
+				function (error) { // failure handler
 					bot.sendMessage({
 						to: channelID,
-						message: 'please enter valid url'
+						message: 'whoops '+'message format is ```!pin url``` no need to wrap in inverted-commas or brackets'
 					});
-				}
+					console.log(error)
+				})
 
-			Linky.create({category, url_text, url, desc}, function(err, newData){
-			    if(err){
-			      console.log(err);
-			    } else {
-			      console.log('data saved');
-			    }
-		  	});
 		  	} catch(err) {
 		  		console.log(err)
 				bot.simulateTyping( channelID );
 				bot.sendMessage({
 					to: channelID,
-					message: 'wrong message format'
+					message: 'error'
 				});
 			}
 			
@@ -101,7 +105,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
 
 });
 
-//route for general
+//route for data
 app.get('/data', (req, res) => {
 	Linky.find({}, function (err, result) {
 		if (err){
@@ -112,15 +116,6 @@ app.get('/data', (req, res) => {
 		res.json(result);
 	});
 });
-
-const ValidURL = (vUrl) => {
-  let regex = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-  if(!regex.test(vUrl)) {
-    return false;
-  } else {
-    return true;
-  }
-}
 
 app.listen(port, (req, res) => {
 	console.log("bot is listening on port " + port);
