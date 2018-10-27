@@ -13,6 +13,8 @@ const botName = "pinner";
 //db url
 let db_url = process.env.DBURL;
 // let db_url = "mongodb://127.0.0.1:27017/test";
+//DISCORD TOKEN
+const token = process.env.DISCORD_TOKEN;
 
 mongoose.connect(db_url, {useNewUrlParser: true});
 
@@ -41,7 +43,7 @@ console.log(Linky.db.name);
 
 const bot = new discord.Client({
 	autorun: true,
-	token: process.env.DISCORD_TOKEN;
+	token: token;
 });
 
 bot.on('ready', (event) => {
