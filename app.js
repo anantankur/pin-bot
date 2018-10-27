@@ -6,8 +6,8 @@ let bodyParser = require('body-parser');
 const app = exp();
 app.use(bodyParser.json());
 const port = process.env.PORT || 3001;
-const channel = process.env.CHANNELRT;
-const channel = process.env.CHANNELT;
+const channelRt = process.env.CHANNELRT;
+const channelT = process.env.CHANNELT;
 //bot name
 const botName = "pinner";
 //db url
