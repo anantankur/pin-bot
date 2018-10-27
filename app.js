@@ -6,7 +6,7 @@ let bodyParser = require('body-parser');
 const app = exp();
 app.use(bodyParser.json());
 const port = process.env.PORT || 3001;
-const channelRt = process.env.CHANNELRT;
+const channelA1 = process.env.CHANNELA1;
 const channelT = process.env.CHANNELT;
 //bot name
 const botName = "pinner";
@@ -57,9 +57,9 @@ bot.on('message', (user, userID, channelID, message, event) => {
 		bot.sendMessage({
 			to: channelID,
 			message: "message format -> `!pin url`"+"\n"
-			+"`no need to wrap any text in commas/brackets`"+" :smiley:"
+			+"no need to wrap url in commas/brackets" + " :smiley:"
 		});
-	}	else if(message.startsWith('!pin') && (user !== botName) && (channelID === CHANNELT || channelID === CHANNELRT)) {
+	}	else if(message.startsWith('!pin') && (user !== botName) && (channelID === channelT || channelID === channelA1)) {
 
 			try{
 				url = message.substr(4).trim();
