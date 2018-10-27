@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 const channel = process.env.CHANNELRT;
 const channel = process.env.CHANNELT;
 //bot name
-const botName = "dev-resources";
+const botName = "pinner";
 //db url
 let db_url = process.env.DBURL;
 // let db_url = "mongodb://127.0.0.1:27017/test";
