@@ -5,7 +5,8 @@ let bodyParser = require('body-parser');
 const app = exp();
 app.use(bodyParser.json());
 const port = process.env.PORT || 3001;
-const channel = process.env.CHANNEL;
+const channelA1 = process.env.CHANNELA1;
+const channelT = process.env.CHANNELT;
 //bot name
 const botName = "pinner";
 //db url
@@ -58,7 +59,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
 			+"category: general, webdesign"+"\n"
 			+"no need to wrap any text in commas/brackets"+" :smiley:"
 		});
-	}	else if(message.includes('pinner-pin~') && (user !== botName) && (channelID === channel )) {
+	}	else if(message.includes('pinner-pin~') && (user !== botName) && (channelID === channelA1 || channelID === channelT)) {
 
 			try{
 				category = message.split('~')[1].trim();
