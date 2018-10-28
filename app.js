@@ -52,56 +52,101 @@ bot.on('message', (user, userID, channelID, message, event) => {
 
 	let url, category, url_text, desc;
 
-	if (message === "~help~") {
-		bot.simulateTyping( channelID );
+	if (message === "~help") {
+		helpMessage = {
+			'title': "Help List",
+			"fields": [
+		      {
+		        "name": "~category",
+		        "value": "Available url categories"
+		      },
+		      {
+		        "name": "~pin ~ category ~ url",
+		        "value": "Add url to website"
+		      }
+	      	],
+			'color': 12991759
+		}
 		bot.sendMessage({
 			to: channelID,
-			message: "message format -> `!pin url`"+"\n"
-			+"no need to wrap url in commas/brackets" + " :smiley:"
+			embed: helpMessage
 		});
-	}	else if(message.startsWith('!pin') && (user !== botName) && (channelID === channelT || channelID === channelA1)) {
+	}else if (message === "~category") {
+		catMessage = {
+			'description': `There are ${preCat.length} categories \n ${preCat.join(", ")}`,
+			'color': 15277667
+		}
+		bot.sendMessage({
+			to: channelID,
+			embed: catMessage
+		});
+	}else if(message.startsWith('~') && (user !== botName) && (channelID === "504977712792731680" || channelID === "447279735198973961" || channelID==="505053573579669505" )) {
 
-			try{
-				url = message.substr(4).trim();
-				console.log(url);
+		try{
+			tMessage = message.substr(1);
+			category = tMessage.split('~')[1].trim();
+			url = tMessage.split('~')[2].trim();
+			console.log(url);
+			console.log("category: "+ category);
 
-				urlMetadata(url).then(
-				function (metadata) { // success handler
-					category = "random";
-					url_text = metadata.title;
-					desc = metadata.description;
-					bot.sendMessage({
-						to: channelID,
-						message: 'by ' + user + "\n" + url
-					});
-
-					Linky.create({category, url_text, url, desc}, function(err, newData){
-					    if(err){
-					      console.log(err);
-					    } else {
-					      console.log('data saved');
-					    }
-				  	});
-					console.log(metadata.title)
-				},
-				function (error) { // failure handler
-					bot.sendMessage({
-						to: channelID,
-						message: 'whoops '+'message format is ```!pin url``` no need to wrap in inverted-commas or brackets'
-					});
-					console.log(error)
-				})
-
-		  	} catch(err) {
-		  		console.log(err)
-				bot.simulateTyping( channelID );
+			urlMetadata(url).then(
+			function (metadata) { // success handler
+				url_text = metadata.title;
+				desc = metadata.description;
+				urlSavedMessage = {
+				    color: 1507110,
+				    footer: { 
+				      text: 'added by '+user
+				    },
+				    thumbnail:
+				    {
+				      url: metadata.image
+				    },
+				    title: url_text,
+				    description: desc,
+				    url: url
+				  }
 				bot.sendMessage({
 					to: channelID,
-					message: 'error'
+					message: "Link added successfully",
+					embed: urlSavedMessage
 				});
+
+				Linky.create({category, url_text, url, desc}, function(err, newData){
+				    if(err){
+				      console.log(err);
+				    } else {
+				      console.log('data saved');
+				    }
+			  	});
+				console.log(metadata.title)
+			},
+			function (error) { // failure handler
+				errMessage = {
+					'description': 'whoops! '+'message format is ```!pin ~ category ~ url``` no need to wrap url in inverted-commas or brackets\n'
+					+'use `~category` to check available categories :smiley:',
+					'color': 13373992
+				}
+				bot.sendMessage({
+					to: channelID,
+					embed: errMessage
+				});
+				console.log(error)
+			})
+
+	  	} catch(err) {
+	  		console.log(err)
+	  		networkMessage = {
+				'description': 'whoops! '+'either you have entered message in wrong format or you have network issues\n use `~help`',
+				'color': 13373992
 			}
-			
+			bot.sendMessage({
+				to: channelID,
+				embed: networkMessage
+			});
 		}
+		
+	}
 
 });
 
