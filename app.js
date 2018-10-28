@@ -24,6 +24,8 @@ app.use(function(req, res, next) {
     next();
 });
 
+let preCat = ["general", "webDesign", "random"];
+
 let linkSchema = new mongoose.Schema({
 	category: String,
 	url_text: String,
