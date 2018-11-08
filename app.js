@@ -5,13 +5,14 @@ let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 const app = exp();
 app.use(bodyParser.json());
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const channelA1 = process.env.CHANNELA1;
 const channelT = process.env.CHANNELT;
 //bot name
 const botName = "pinner";
 //db url
 let db_url = process.env.DBURL;
+// for local setup
 // let db_url = "mongodb://127.0.0.1:27017/test";
 
 mongoose.connect(db_url, {useNewUrlParser: true});
@@ -24,7 +25,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-let preCat = ["general", "webDesign", "random"];
+let preCat = ["general", "webdesign", "javascript", "tools", "git", "interview", "youtube", "random"];
 
 let linkSchema = new mongoose.Schema({
 	category: String,
@@ -75,7 +76,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
 		});
 	}else if (message === "~category") {
 		catMessage = {
-			'description': `There are ${preCat.length} categories \n ${preCat.join(", ")}`,
+			'description': `There are ${preCat.length} categories \n ${preCat.join(", ")} \n \n If no category applies then set category to \`random\``,
 			'color': 15277667
 		}
 		bot.sendMessage({
